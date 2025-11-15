@@ -62,7 +62,7 @@ knitr::knit_hooks$set(chunk = function(x, options) {
 #| include: false
 ### Customized options for this document
 # Add necessary packages here
-packages <- c("tidyverse")
+packages <- c("tidyverse", "divent", "vegan")
 # Install them
 install_packages(packages)
 
@@ -99,7 +99,6 @@ options(tibble.print_min = 5, tibble.width = 50)
 set.seed(973)
 ```
 
-
 # Théorie
 
 ## Entropie
@@ -112,11 +111,77 @@ Information $I(p_s)$, décroissante, $I(1) = 0$
 
 Entropie = Information moyenne apportée par un individu: $\sum_s{p_s I(p_s)}$
 
-
 ## Exemples
 
-Rényi
+@Shannon1948 : $I(p_s) = \ln{\frac{1}{p_s}}$ ; $H = \sum_s{p_s \ln{\frac{1}{p_s}}}$
 
+@Renyi1961 : $^{\alpha}R = \frac{1}{1 - \alpha} \ln{\sum_s{p_s^\alpha}}$
+
+@Tsallis1998a : $^{q}H = \frac{1}{q - 1} (1 - \sum_s{p_s^q})$.
+Appelée HCDT [@Havrda1967; @Daroczy1970; @Tsallis1998a]
+
+## Axiomatique
+
+Les trois entropies respectent [@Patil1982; @Grabchak2016] :
+
+-   Symétrie
+-   Continuité par rapport aux probabilités
+-   Principe des transferts, qui contient:
+    -   L'ajout d'une espèce augmente la diversité
+    -   Maximisation si toutes les probabilités sont égales
+
+## Propriétés
+
+$^{0}H$ est le nombre d'espèces -1 $^{1}H$ est l'entropie de Shannon $^{2}H$ est l'entropie de Simpson : $1 - \sum_s{p_s^2}$
+
+$q$ paramétrise l'importance des espèces rares.
+
+## Logarithmes déformés
+
+@Tsallis1994:
+
+$\ln_q{x} = \frac{x^{1-q} - 1}{1 - q}$
+
+$e_q^x = \left[1 + \left(1 - q \right)x \right]^{\frac{1}{q - 1}}$
+
+Simplifie l'écriture de l'entropie HCDT [@Marcon2014a] :
+
+$^{q}H = \sum_s{p_s \ln_q{\frac{1}{p_s}}}$
+
+## Résumé / Définitions 1
+
+La rareté est l'inverse de la probabilité : $\frac{1}{p_s}$
+
+L'information est le logarithme (déformé) de la rareté : $\ln_q{\frac{1}{p_s}}$
+
+L'entropie est l'espérance de l'information :
+
+$^{q}H = \sum_s{p_s \ln_q{\frac{1}{p_s}}}$
+
+## Nombres de Hill
+
+@Hill1973 : Nombre d'espèces équiprobables ayant l'entropie des données
+
+Résume la diversité à un seul nombre : diversité au sens strict [@Jost2006]
+
+La diversité est l'exponentielle de l'entropie [@Marcon2014a] :
+
+$^{q}D = e_q^{^{q}H}$
+
+# Pratique
+
+## Barro Colorado Island
+
+```{r}
+library("vegan")
+data(BCI)
+```
+
+
+## Courbe d'accumulatipn
+
+
+## Diversité asymptotique
 
 
 
@@ -126,9 +191,9 @@ Rényi
 
 Incremental bullets start with `> -` instead of `-`:
 
-> - Bullet 1
-> - A reference: @Xie2016.
-> - Bullet 3
+> -   Bullet 1
+> -   A reference: @Xie2016.
+> -   Bullet 3
 
 ## Slide with R Output
 
@@ -140,14 +205,14 @@ R code chunks are displayed as follows:
 head(cars)
 ```
 
-## Slide with a Centered Plot{.flexbox .vcenter}
+## Slide with a Centered Plot {.flexbox .vcenter}
 
 ```{r}
 #| label: pressure
 plot(pressure)
 ```
 
-## Two Column Layout{.columns-2} 
+## Two Column Layout {.columns-2}
 
 \begincols
   \begincol{.48\textwidth}
@@ -158,10 +223,11 @@ In Beamer, each column in between `\begincol` and `\endcol`.
 
 In HTML, the `{.columns-2}` option is added to the slide title and `<p class="forceBreak"></p>` allows forcing column break.
 
+\endcol \begincol{.48\textwidth}
 
-  \endcol
-  \begincol{.48\textwidth}
-  <p class="forceBreak"></p>
+<p class="forceBreak">
+
+</p>
 
 ```{r}
 #| label: pressure2
@@ -169,8 +235,7 @@ In HTML, the `{.columns-2}` option is added to the slide title and `<p class="fo
 plot(pressure)
 ```
 
-  \endcol
-\endcols
+\endcol \endcols
 
 ## Documentation
 
@@ -178,17 +243,23 @@ See [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/iosl
 
 Note:
 
-- `{.flexbox .vcenter}` to center the HTML slide with plot.
-- `out.width='90%'` to reduce the size of the plot in the Two Column Layout slide.
+-   `{.flexbox .vcenter}` to center the HTML slide with plot.
+-   `out.width='90%'` to reduce the size of the plot in the Two Column Layout slide.
 
-Keep the code below to have a slide for references, allow two-column slides in _ioslides_ (but not in _Slidy_) and allow scrolling oversized slides.
+Keep the code below to have a slide for references, allow two-column slides in *ioslides* (but not in *Slidy*) and allow scrolling oversized slides.
 
-<!-- A slide for references --> 
+<!--# A slide for references -->
+
 `r if (!knitr:::is_latex_output()) '## References {.smaller}'`
-<!-- Styles for HTML slides -->
-<!-- https://stackoverflow.com/questions/38260799/references-page-truncated-in-rmarkdown-ioslides-presentation/38294541#38294541 -->
+
+<!--# Styles for HTML slides -->
+
+<!--# https://stackoverflow.com/questions/38260799/references-page-truncated-in-rmarkdown-ioslides-presentation/38294541#38294541 -->
+
+```{=html}
 <style>
   .forceBreak { -webkit-column-break-after: always; break-after: column; }
   slides > slide { overflow: scroll; }
   slides > slide:not(.nobackground):after { content: ''; }
 </style>
+```
