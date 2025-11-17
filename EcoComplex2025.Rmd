@@ -68,17 +68,17 @@ install_packages(packages)
 
 # knitr options
 knitr::opts_chunk$set(
-  cache =   FALSE,    # Cache chunk results
-  include = TRUE,     # Show/Hide chunks
-  echo =    FALSE,    # Show/Hide code
-  warning = FALSE,    # Show/Hide warnings
-  message = FALSE,    # Show/Hide messages
+  cache =   TRUE,    # Cache chunk results
+  include = TRUE,    # Show/Hide chunks
+  echo =    TRUE,    # Show/Hide code
+  warning = FALSE,   # Show/Hide warnings
+  message = FALSE,   # Show/Hide messages
   # Figure alignment and size
-  fig.align = 'center', out.width = '80%',
+  fig.align = 'center', out.width = '90%',
   # Graphic devices (ragg_png is better than standard png)
   dev = c("ragg_png", "pdf"),
   # Code chunk format
-  tidy = TRUE, tidy.opts = list(blank = FALSE, width.cutoff = 50),
+  tidy = FALSE, tidy.opts = list(blank = FALSE, width.cutoff = 50),
   size = "scriptsize", knitr.graphics.auto_pdf = TRUE
 )
 options(width = 50)
@@ -170,20 +170,136 @@ $^{q}D = e_q^{^{q}H}$
 
 # Pratique
 
-## Barro Colorado Island
+## Barro Colorado Island {.columns-2}
+
+\begincols
+  \begincol{.3\textwidth}
 
 ```{r}
+#| eval: false
 library("vegan")
 data(BCI)
+BCI %>% 
+  # Sum all plots
+  colSums() -> BCI_50ha
+library("divent")
+BCI_50ha %>% 
+  as_abundances() %>% 
+  autoplot()
 ```
 
+\endcol \begincol{.7\textwidth}
 
-## Courbe d'accumulatipn
+<p class="forceBreak">
 
+</p>
 
-## Diversité asymptotique
+```{r}
+#| echo: false
+library("vegan")
+data(BCI)
+BCI %>% 
+  # Sum all plots
+  colSums() -> BCI_50ha
+library("divent")
+BCI_50ha %>% 
+  as_abundances() %>% 
+  autoplot() +
+  theme(text = element_text(size = 24))
+```
 
+\endcol \endcols
 
+## Courbe d'accumulation {.flexbox .vcenter}
+
+Diversité de l'échantillon, asymptotique ou standardisée
+
+```{r}
+#| label: BCI_accum
+BCI_S_estimate <- div_richness(BCI_50ha, as_numeric = TRUE)
+BCI_density <- round(sum(BCI) / 50)
+BCI_S_1ha <- round(
+  div_richness(
+    BCI_50ha, 
+    level = BCI_density, 
+    as_numeric = TRUE
+  )
+)
+BCI_50ha %>%
+  # Declare the object class (divent)
+  as_abundances() %>% 
+  # Site name
+  mutate(site = "BCI") %>% 
+  # Accumulation curve up to 2x sample size
+  accum_hill(levels = seq_len(2 * sum(BCI_50ha))) %>% 
+  # Plot
+  autoplot() +
+  # Asymptotic estimator
+  geom_hline(
+    yintercept = c(BCI_S_estimate, BCI_S_1ha),
+    linetype = c(2, 3)
+  ) +
+  geom_vline(
+    xintercept = BCI_density, 
+    linetype = 3
+  ) +
+  theme(legend.position = "none") +
+  labs(y = "Number of Species")
+```
+
+## Accumulation de la diversité {.flexbox .vcenter}
+
+Raisonnement identique pour la diversité de Shannon
+
+Courbe !
+
+## Diversité aymptotique
+
+Il existe des estimateurs :
+
+-   Richesse : Chao ou Jacknife
+-   Entropie HCDT :
+    -   Réduction du biais d'estimation
+    -   Estimation de la distribution réelle
+
+## Diversité aymptotique
+
+En pratique : package divent
+
+## Profil de diversité
+
+# Diversité phylogénétique
+
+## Dendrogramme
+
+Phylogénie dans l'idéal, taxonomie possible.
+
+## Définition
+
+L'entropie est l'information moyenne au cours du temps.
+
+## Application
+
+Profil de diversité de Paracou, basé sur la taxonomie.
+
+# Décomposition de la diversité
+
+## Définitions
+
+@Whittaker1960 : plusieurs communautés regroupées dans une métacommunauté dont les communautés sont des échantillons.
+La diversité est la richesse (entropie et diversité).
+
+-   Diversité $\alpha$ : diversité moyenne des communautés (nombre moyen d'espèces)
+-   Diversité $\gamma$ : de la métacommunauté (nombre total d'espèces)
+-   Diversité $\beta$ : entre les communautés. Ratio $\gamma / \alpha$ ou différence $\gamma - \alpha$
+
+## Définitions
+
+Précisément :
+
+- L'entropie $\alpha$ est la moyenne des entropies locales : quantité d'information
+- La diversité est l'exponentielle de l'entropie
+- La diversité $\beta$ est le rapport des diversités, l'entropie $\beta$ la différence des entropies.
 
 # Advanced code
 
