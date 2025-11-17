@@ -70,7 +70,7 @@ install_packages(packages)
 knitr::opts_chunk$set(
   cache =   TRUE,    # Cache chunk results
   include = TRUE,    # Show/Hide chunks
-  echo =    TRUE,    # Show/Hide code
+  echo =    FALSE,   # Show/Hide code
   warning = FALSE,   # Show/Hide warnings
   message = FALSE,   # Show/Hide messages
   # Figure alignment and size
@@ -88,7 +88,8 @@ library("tidyverse")
 theme_set(theme_bw())
 theme_update(
   panel.background = element_rect(fill = "transparent", colour = NA),
-  plot.background = element_rect(fill = "transparent", colour = NA)
+  plot.background = element_rect(fill = "transparent", colour = NA),
+  text = element_text(size = 24)
 )
 knitr::opts_chunk$set(dev.args = list(bg = "transparent"))
 
@@ -113,12 +114,21 @@ Entropie = Information moyenne apportée par un individu: $\sum_s{p_s I(p_s)}$
 
 ## Exemples
 
-@Shannon1948 : $I(p_s) = \ln{\frac{1}{p_s}}$ ; $H = \sum_s{p_s \ln{\frac{1}{p_s}}}$
+Le fondateur : @Shannon1948
 
-@Renyi1961 : $^{\alpha}R = \frac{1}{1 - \alpha} \ln{\sum_s{p_s^\alpha}}$
+-   $I(p_s) = \ln{\frac{1}{p_s}}$
+-   $H = \sum_s{p_s \ln{\frac{1}{p_s}}}$
 
-@Tsallis1998a : $^{q}H = \frac{1}{q - 1} (1 - \sum_s{p_s^q})$.
-Appelée HCDT [@Havrda1967; @Daroczy1970; @Tsallis1998a]
+Les généralisations :
+
+-   @Renyi1961 :
+
+    -   $^{\alpha}R = \frac{1}{1 - \alpha} \ln{\sum_s{p_s^\alpha}}$
+
+-   @Tsallis1998a :
+
+    -   $^{q}H = \frac{1}{q - 1} (1 - \sum_s{p_s^q})$.
+    -   Appelée HCDT [@Havrda1967; @Daroczy1970; @Tsallis1998a]
 
 ## Axiomatique
 
@@ -132,7 +142,11 @@ Les trois entropies respectent [@Patil1982; @Grabchak2016] :
 
 ## Propriétés
 
-$^{0}H$ est le nombre d'espèces -1 $^{1}H$ est l'entropie de Shannon $^{2}H$ est l'entropie de Simpson : $1 - \sum_s{p_s^2}$
+$^{0}H$ est le nombre d'espèces -1
+
+$^{1}H$ est l'entropie de Shannon
+
+$^{2}H$ est l'entropie de Simpson : $1 - \sum_s{p_s^2}$
 
 $q$ paramétrise l'importance des espèces rares.
 
@@ -140,15 +154,32 @@ $q$ paramétrise l'importance des espèces rares.
 
 @Tsallis1994:
 
-$\ln_q{x} = \frac{x^{1-q} - 1}{1 - q}$
+-   $\ln_q{x} = \frac{x^{1-q} - 1}{1 - q}$
 
-$e_q^x = \left[1 + \left(1 - q \right)x \right]^{\frac{1}{q - 1}}$
+-   $e_q^x = \left[1 + \left(1 - q \right)x \right]^{\frac{1}{q - 1}}$
 
 Simplifie l'écriture de l'entropie HCDT [@Marcon2014a] :
 
 $^{q}H = \sum_s{p_s \ln_q{\frac{1}{p_s}}}$
 
-## Résumé / Définitions 1
+## Logarithmes déformés {.flexbox .vcenter}
+
+```{r}
+I0 <- function(p) (1 - p)/p
+I1 <- function(p) -log(p)
+I2 <- function(p) 1 - p
+ggplot(
+  data.frame(x = c(0, 1)), 
+  aes(x)
+) + 
+  stat_function(fun = I0) +
+  stat_function(fun = I1, lty = 2) + 
+  stat_function(fun = I2, lty = 3) + 
+  coord_cartesian(ylim = c(0, 10)) + 
+  labs(x = "p", y = "I(p)")
+```
+
+## Résumé / Définitions
 
 La rareté est l'inverse de la probabilité : $\frac{1}{p_s}$
 
@@ -156,7 +187,7 @@ L'information est le logarithme (déformé) de la rareté : $\ln_q{\frac{1}{p_s}
 
 L'entropie est l'espérance de l'information :
 
-$^{q}H = \sum_s{p_s \ln_q{\frac{1}{p_s}}}$
+$$^{q}H = \sum_s{p_s \ln_q{\frac{1}{p_s}}}$$
 
 ## Nombres de Hill
 
@@ -166,33 +197,11 @@ Résume la diversité à un seul nombre : diversité au sens strict [@Jost2006]
 
 La diversité est l'exponentielle de l'entropie [@Marcon2014a] :
 
-$^{q}D = e_q^{^{q}H}$
+$$^{q}D = e_q^{^{q}H}$$
 
 # Pratique
 
-## Barro Colorado Island {.columns-2}
-
-\begincols
-  \begincol{.3\textwidth}
-
-```{r}
-#| eval: false
-library("vegan")
-data(BCI)
-BCI %>% 
-  # Sum all plots
-  colSums() -> BCI_50ha
-library("divent")
-BCI_50ha %>% 
-  as_abundances() %>% 
-  autoplot()
-```
-
-\endcol \begincol{.7\textwidth}
-
-<p class="forceBreak">
-
-</p>
+## Barro Colorado Island {.flexbox .vcenter}
 
 ```{r}
 #| echo: false
@@ -204,11 +213,8 @@ BCI %>%
 library("divent")
 BCI_50ha %>% 
   as_abundances() %>% 
-  autoplot() +
-  theme(text = element_text(size = 24))
+  autoplot()
 ```
-
-\endcol \endcols
 
 ## Courbe d'accumulation {.flexbox .vcenter}
 
@@ -244,29 +250,41 @@ BCI_50ha %>%
     linetype = 3
   ) +
   theme(legend.position = "none") +
-  labs(y = "Number of Species")
+  labs(y = "Diversity")
 ```
-
-## Accumulation de la diversité {.flexbox .vcenter}
-
-Raisonnement identique pour la diversité de Shannon
-
-Courbe !
 
 ## Diversité aymptotique
 
 Il existe des estimateurs :
 
--   Richesse : Chao ou Jacknife
+-   Richesse : Chao [@Chao1984] ou Jacknife [@Burnham1978]
+
+```{r}
+#| echo: true
+#| df_print: kable
+library("divent")
+div_richness(BCI_50ha)
+```
+
 -   Entropie HCDT :
-    -   Réduction du biais d'estimation
-    -   Estimation de la distribution réelle
+    -   Réduction du biais d'estimation [@Chao2015]
+    -   Estimation de la distribution réelle [@Chao2014c]
 
-## Diversité aymptotique
+```{r}
+#| echo: true
+#| df_print: tibble
+div_hill(BCI_50ha, q = 1)
+```
 
-En pratique : package divent
+## Profil de diversité {.flexbox .vcenter}
 
-## Profil de diversité
+Diversité en fonction de son ordre [@Tothmeresz1995]
+
+```{r}
+profile_hill(BCI_50ha) %>% 
+  autoplot() +
+  theme(legend.position = "none")
+```
 
 # Diversité phylogénétique
 
@@ -274,95 +292,76 @@ En pratique : package divent
 
 Phylogénie dans l'idéal, taxonomie possible.
 
+![](images/dendrogram.png)
+
 ## Définition
 
-L'entropie est l'information moyenne au cours du temps.
+L'entropie est l'information moyenne au cours du temps [@Pavoine2011].
 
-## Application
-
-Profil de diversité de Paracou, basé sur la taxonomie.
+$$^{q}\bar{H}(T) = \sum_k{\frac{T_k}{T} {^{q}_{k}H}}$$ La diversité est son exponentielle [@Marcon2014b].
 
 # Décomposition de la diversité
 
 ## Définitions
 
-@Whittaker1960 : plusieurs communautés regroupées dans une métacommunauté dont les communautés sont des échantillons.
-La diversité est la richesse (entropie et diversité).
+@Whittaker1960 : plusieurs communautés regroupées dans une métacommunauté dont les communautés sont des échantillons. La diversité est la richesse (entropie et diversité).
 
 -   Diversité $\alpha$ : diversité moyenne des communautés (nombre moyen d'espèces)
 -   Diversité $\gamma$ : de la métacommunauté (nombre total d'espèces)
--   Diversité $\beta$ : entre les communautés. Ratio $\gamma / \alpha$ ou différence $\gamma - \alpha$
+-   Diversité $\beta$ : entre les communautés. Ratio $\gamma / \alpha$ ou différence $\gamma - \alpha$ [@Lande1996]
 
 ## Définitions
 
 Précisément :
 
-- L'entropie $\alpha$ est la moyenne des entropies locales : quantité d'information
-- La diversité est l'exponentielle de l'entropie
-- La diversité $\beta$ est le rapport des diversités, l'entropie $\beta$ la différence des entropies.
+-   L'entropie $\alpha$ est la moyenne des entropies locales : quantité d'information
+-   La diversité est l'exponentielle de l'entropie
+-   La diversité $\beta$ est le rapport des diversités, l'entropie $\beta$ la différence des entropies
+-   La diversité $\beta$ est un nombre effectif de communautés : communautés de même poids, sans aucune espèce commune
 
-# Advanced code
+## Exemple simple
 
-## Slide with Incremental Bullets
+3 Communautés avec respectivement 6, 4 et 5 espèces ; 10 espèces au total :
 
-Incremental bullets start with `> -` instead of `-`:
+-   Diversité $\alpha$ : 5 espèces par communauté
+-   Diversité $\gamma$ : 10 espèces
+-   Diversité $\beta$ : 2 communautés effectives
 
-> -   Bullet 1
-> -   A reference: @Xie2016.
-> -   Bullet 3
+10 espèces = 5 espèces par communauté X 2 communautés
 
-## Slide with R Output
-
-R code chunks are displayed as follows:
-
-```{r}
-#| label: cars
-#| echo: true
-head(cars)
-```
-
-## Slide with a Centered Plot {.flexbox .vcenter}
+## BCI
 
 ```{r}
-#| label: pressure
-plot(pressure)
+library(entropart)
+BCI_MC <- MetaCommunity(t(BCI))
+DivProfile(q.seq = seq(0, 2, 0.1), BCI_MC) %>% plot()
 ```
 
-## Two Column Layout {.columns-2}
+# Conclusion
 
-\begincols
-  \begincol{.48\textwidth}
+## Messages à emporter
 
-This slide has two columns.
+L'entropie permet de caractériser la diversité : c'est l'espérance de l'information apportée par un individu
 
-In Beamer, each column in between `\begincol` and `\endcol`.
+L'entropie est une quantité d'information
 
-In HTML, the `{.columns-2}` option is added to the slide title and `<p class="forceBreak"></p>` allows forcing column break.
+La diversité au sens strict est un nombre effectif (d'espèces, de communautés...)
 
-\endcol \begincol{.48\textwidth}
+Pas d'indices de diversité ici : seulement des mesures
 
-<p class="forceBreak">
+## Messages à emporter
 
-</p>
+La rareté est l'inverse de la probabilité : $\frac{1}{p_s}$
 
-```{r}
-#| label: pressure2
-#| out-width: 90%
-plot(pressure)
-```
+L'information est le logarithme (déformé) de la rareté : $\ln_q{\frac{1}{p_s}}$
 
-\endcol \endcols
+L'entropie est l'espérance de l'information :
 
-## Documentation
+$$^{q}H = \sum_s{p_s \ln_q{\frac{1}{p_s}}}$$
 
-See [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/ioslides-presentation.html) for full documentation about HTML slides.
+La diversité est son exponentielle : $$^{q}D = e_q^{^{q}H}$$
 
-Note:
-
--   `{.flexbox .vcenter}` to center the HTML slide with plot.
--   `out.width='90%'` to reduce the size of the plot in the Two Column Layout slide.
-
-Keep the code below to have a slide for references, allow two-column slides in *ioslides* (but not in *Slidy*) and allow scrolling oversized slides.
+En pratique : package [divent](https://ericmarcon.github.io/divent/)
 
 <!--# A slide for references -->
 
