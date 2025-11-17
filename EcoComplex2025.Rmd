@@ -62,7 +62,7 @@ knitr::knit_hooks$set(chunk = function(x, options) {
 #| include: false
 ### Customized options for this document
 # Add necessary packages here
-packages <- c("tidyverse", "divent", "vegan")
+packages <- c("tidyverse", "divent", "vegan", "entropart")
 # Install them
 install_packages(packages)
 
