@@ -104,7 +104,7 @@ set.seed(973)
 
 ## Entropie
 
-Expérience à plusieurs résultats possibles $\{r_1, r_2, \dots, r_s, \dots, r_S\}$
+Expérience à plusieurs résultats possibles : espèce à laquelle appartient un individu : $\{r_1, r_2, \dots, r_s, \dots, r_S\}$
 
 Probabilités associées $\{p_1, p_2, \dots, p_s, \dots, p_S\}$
 
@@ -128,7 +128,7 @@ Les généralisations :
 -   @Tsallis1998a :
 
     -   $^{q}H = \frac{1}{q - 1} (1 - \sum_s{p_s^q})$.
-    -   Appelée HCDT [@Havrda1967; @Daroczy1970; @Tsallis1998a]
+    -   Appelée aussi HCDT [@Havrda1967; @Daroczy1970; @Tsallis1998a]
 
 ## Axiomatique
 
@@ -149,6 +149,8 @@ $^{1}H$ est l'entropie de Shannon
 $^{2}H$ est l'entropie de Simpson : $1 - \sum_s{p_s^2}$
 
 $q$ paramétrise l'importance des espèces rares.
+
+Application à la relation diversité-productivité en forêt @Liang2016 : $q = 2$.
 
 ## Logarithmes déformés
 
@@ -191,7 +193,8 @@ $$^{q}H = \sum_s{p_s \ln_q{\frac{1}{p_s}}}$$
 
 ## Nombres de Hill
 
-@Hill1973 : Nombre d'espèces équiprobables ayant l'entropie des données
+@Hill1973 : Nombre d'espèces équiprobables ayant l'entropie des données.
+Nombre effectif [@Wright1931 ; @Gregorius1991].
 
 Résume la diversité à un seul nombre : diversité au sens strict [@Jost2006]
 
@@ -202,6 +205,8 @@ $$^{q}D = e_q^{^{q}H}$$
 # Pratique
 
 ## Barro Colorado Island {.flexbox .vcenter}
+
+Diagramme rang-abondance [@Whittaker1965]
 
 ```{r}
 #| echo: false
@@ -290,7 +295,7 @@ profile_hill(BCI_50ha) %>%
 
 ## Dendrogramme
 
-Phylogénie dans l'idéal, taxonomie possible.
+Phylogénie dans l'idéal, taxonomie possible [@Ricotta2012a].
 
 ![](images/dendrogram.png)
 
@@ -304,7 +309,8 @@ $$^{q}\bar{H}(T) = \sum_k{\frac{T_k}{T} {^{q}_{k}H}}$$ La diversité est son exp
 
 ## Définitions
 
-@Whittaker1960 : plusieurs communautés regroupées dans une métacommunauté dont les communautés sont des échantillons. La diversité est la richesse (entropie et diversité).
+@Whittaker1960 : plusieurs communautés regroupées dans une métacommunauté dont les communautés sont des échantillons.
+La diversité est la richesse (entropie et diversité).
 
 -   Diversité $\alpha$ : diversité moyenne des communautés (nombre moyen d'espèces)
 -   Diversité $\gamma$ : de la métacommunauté (nombre total d'espèces)
@@ -317,7 +323,7 @@ Précisément :
 -   L'entropie $\alpha$ est la moyenne des entropies locales : quantité d'information
 -   La diversité est l'exponentielle de l'entropie
 -   La diversité $\beta$ est le rapport des diversités, l'entropie $\beta$ la différence des entropies
--   La diversité $\beta$ est un nombre effectif de communautés : communautés de même poids, sans aucune espèce commune
+-   La diversité $\beta$ est un nombre effectif de communautés : communautés de même poids, sans aucune espèce commune [@Jost2007]
 
 ## Exemple simple
 
@@ -361,7 +367,7 @@ $$^{q}H = \sum_s{p_s \ln_q{\frac{1}{p_s}}}$$
 
 La diversité est son exponentielle : $$^{q}D = e_q^{^{q}H}$$
 
-En pratique : package [divent](https://ericmarcon.github.io/divent/)
+En pratique : package [divent](https://ericmarcon.github.io/divent/) et de la lecture ([écran](https://ericmarcon.github.io/MesuresBioDiv2) ou [PDF](https://ericmarcon.github.io/MesuresBioDiv2/MesuresBD.pdf)).
 
 <!--# A slide for references -->
 
