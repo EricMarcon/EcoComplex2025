@@ -32,6 +32,9 @@
 
 # Template specific
 packages.bib
+cache/
+EcoComplex2025.html
+EcoComplex2025.pdf
 
 # Uncomment if CI builds docs/
 # docs/
