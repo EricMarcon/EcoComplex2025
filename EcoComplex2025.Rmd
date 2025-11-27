@@ -193,8 +193,7 @@ $$^{q}H = \sum_s{p_s \ln_q{\frac{1}{p_s}}}$$
 
 ## Nombres de Hill
 
-@Hill1973 : Nombre d'espèces équiprobables ayant l'entropie des données.
-Nombre effectif [@Wright1931 ; @Gregorius1991].
+@Hill1973 : Nombre d'espèces équiprobables ayant l'entropie des données. Nombre effectif [@Wright1931; @Gregorius1991].
 
 Résume la diversité à un seul nombre : diversité au sens strict [@Jost2006]
 
@@ -258,7 +257,7 @@ BCI_50ha %>%
   labs(y = "Diversity")
 ```
 
-## Diversité aymptotique
+## Diversité asymptotique
 
 Il existe des estimateurs :
 
@@ -309,8 +308,7 @@ $$^{q}\bar{H}(T) = \sum_k{\frac{T_k}{T} {^{q}_{k}H}}$$ La diversité est son exp
 
 ## Définitions
 
-@Whittaker1960 : plusieurs communautés regroupées dans une métacommunauté dont les communautés sont des échantillons.
-La diversité est la richesse (entropie et diversité).
+@Whittaker1960 : plusieurs communautés regroupées dans une métacommunauté dont les communautés sont des échantillons. La diversité est la richesse (entropie et diversité).
 
 -   Diversité $\alpha$ : diversité moyenne des communautés (nombre moyen d'espèces)
 -   Diversité $\gamma$ : de la métacommunauté (nombre total d'espèces)
